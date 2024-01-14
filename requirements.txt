@@ -1,3 +1,6 @@
 filemagic
-yara-python
+lief
 
+#borken on macos
+telfhash
+yara-python
