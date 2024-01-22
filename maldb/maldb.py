@@ -8,9 +8,15 @@ con = sqlite3.connect('test.db')
 cur = con.cursor()
 
 def create_db():
-    cur.execute('CREATE TABLE files(uuid, file, md5sum, sha1sum, sha256sum, sha512sum, file_size, file_type, file_name)')
-    cur.execute('CREATE TABLE events(eventid, event_type, timestamp)')
-    cur.execute('CREATE TABLE rules(ruleid, rule_type, rule_name, rule_description, rule_author, rule_version, rule_status, rule_tags, rule_events, rule_actions, rule_conditions )')
+    cur.execute('CREATE TABLE files(fileid, file, md5sum, sha1sum, sha256sum, sha512sum, file_size, file_type)')
+    cur.execute('CREATE TABLE FileSystem(fileid, parent_id, child_id)')
+    
+    #cur.execute('CREATE TABLE geneology(gen_id, directory, parent_id, child_id)')
+
+    cur.execute('CREATE TABLE events(eventid, event_type, tlp_cond, timestamp, event_description, gen_id))')
+    
+    #cur.execute('CREATE TABLE rules(ruleid, rule_type, rule_name, rule_description, rule_author, rule_version, rule_status, rule_tags, rule_events, rule_actions, rule_conditions )')
+    
     con.commit()
 
 def insert_file(filepath):
@@ -18,7 +24,7 @@ def insert_file(filepath):
         data = f.read()
         filename = f.name
 
-    cur.execute('INSERT INTO files VALUES(?, ?, ?, ?, ?, ?)', (uuid.uuid4().hex, data, md5sum(data), sha1sum(data), sha256sum(data), sha512sum(data), len(data),fileid.file_on_buffer(data), ))
+    cur.execute('INSERT INTO files VALUES(?, ?, ?, ?, ?, ?)', (uuid.uuid4().hex, data, md5sum(data), sha1sum(data), sha256sum(data), sha512sum(data), len(data),fileid.file_on_buffer(data)))
     cur.execute('INSERT INTO events VALUES(?, ?, ?)', (uuid.uuid4().hex, 'file_added', datetime.datetime.now(), filename, file_extension)))
     con.commit()
     
